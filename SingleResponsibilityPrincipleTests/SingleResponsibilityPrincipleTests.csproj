@@ -69,7 +69,19 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="goodtrades.txt" />
+    <EmbeddedResource Include="goodtrades.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="negativeTradeAmount.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="invalidTradeCurrency.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="priceDollarSign.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="demicalTradeAmount.txt" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

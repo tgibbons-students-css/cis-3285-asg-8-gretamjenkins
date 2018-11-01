@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.Data.SqlClient;
+using System.Data;
 
 namespace SingleResponsibilityPrinciple.Tests
 {
@@ -17,10 +18,12 @@ namespace SingleResponsibilityPrinciple.Tests
         {
             using (var connection = new System.Data.SqlClient.SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=""C:\Users\greta\OneDrive\Senior Year\Software Design\Unit 8\Participation\tradedatabase.mdf"";Integrated Security=True;Connect Timeout=30;"))
             {
-                connection.Open();
+                if (connection.State == ConnectionState.Closed)
+                {
+                    connection.Open();
+                }
                 string myScalarQuery = "SELECT COUNT(*) FROM trade";
                 SqlCommand myCommand = new SqlCommand(myScalarQuery, connection);
-                myCommand.Connection.Open();
                 int count = (int)myCommand.ExecuteScalar();
                 connection.Close();
                 return count;
@@ -28,31 +31,86 @@ namespace SingleResponsibilityPrinciple.Tests
         }
 
         [TestMethod()]
-        public void ProcessTradesTest()
+        public void TestNormalFile()
         {
-            // Arrange
+            //Arrange
             var tradeStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SingleResponsibilityPrincipleTests.goodtrades.txt");
             var tradeProcessor = new TradeProcessor();
 
-            // Act
+            //Act
+            int countBefore = CountDbRecords();
             tradeProcessor.ProcessTrades(tradeStream);
 
-            // Assert
-            int count = CountDbRecords();
-            Assert.AreEqual(count, 4);
+            //Assert
+            int countAfter = CountDbRecords();
+            Assert.AreEqual(countBefore + 4, countAfter);
         }
 
-        // Process trades test 1
-        // Process trades test 2
+        [TestMethod()]
+        public void TestNegativeTradeAmount()
+        {
+            //Arrange
+            var tradeStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SingleResponsibilityPrincipleTests.negativeTradeAmount.txt");
+            var tradeProcessor = new TradeProcessor();
 
-        // ReadTradeData trades test 1
-        // ReadTradeData trades test 2
+            //Act
+            int countBefore = CountDbRecords();
+            tradeProcessor.ProcessTrades(tradeStream);
 
-        // ParseTrades trades test 1
-        // ParseTrades trades test 2
+            //Assert
+            int countAfter = CountDbRecords();
+            Assert.AreEqual(countBefore + 1, countAfter);
+        }
 
-        // StoreTrades trades test 1
-        // StoreTrades trades test 2
+        [TestMethod()]
+        public void TestInvalidTradeCurrency()
+        {
+            //Arrange
+            var tradeStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SingleResponsibilityPrincipleTests.invalidTradeCurrency.txt");
+            var tradeProcessor = new TradeProcessor();
+            // string[] trade = ["GBPUSF,100,1.5"];
+
+            //Act
+            int countBefore = CountDbRecords();
+            tradeProcessor.ProcessTrades(tradeStream);
+
+            //Assert
+            int countAfter = CountDbRecords();
+            Assert.AreEqual(countBefore + 1, countAfter);
+        }
+
+        [TestMethod()]
+        public void TestPriceDollarSign()
+        {
+            //Arrange
+            var tradeStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SingleResponsibilityPrincipleTests.priceDollarSign.txt");
+            var tradeProcessor = new TradeProcessor();
+
+            //Act
+            int countBefore = CountDbRecords();
+            tradeProcessor.ProcessTrades(tradeStream);
+
+            //Assert
+            int countAfter = CountDbRecords();
+            Assert.AreEqual(countBefore + 1, countAfter);
+        }
+
+        [TestMethod()]
+        public void TestParsingTrade()
+        {
+            //Arrange
+            var tradeStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SingleResponsibilityPrincipleTests.badtrades.txt");
+            var tradeProcessor = new TradeProcessor();
+            // string[] trade = ["GBPUSF,100,1.5"];
+
+            //Act
+            int countBefore = CountDbRecords();
+            tradeProcessor.ProcessTrades(tradeStream);
+
+            //Assert
+            int countAfter = CountDbRecords();
+            Assert.AreEqual(countBefore + 1, countAfter);
+        }
 
     }
 }

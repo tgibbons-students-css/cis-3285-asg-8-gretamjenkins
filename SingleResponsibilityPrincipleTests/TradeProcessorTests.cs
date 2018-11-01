@@ -59,7 +59,7 @@ namespace SingleResponsibilityPrinciple.Tests
 
             //Assert
             int countAfter = CountDbRecords();
-            Assert.AreEqual(countBefore + 1, countAfter);
+            Assert.AreEqual(countBefore, countAfter);
         }
 
         [TestMethod()]
@@ -96,12 +96,11 @@ namespace SingleResponsibilityPrinciple.Tests
         }
 
         [TestMethod()]
-        public void TestParsingTrade()
+        public void TestDecminalTradeAmount()
         {
             //Arrange
-            var tradeStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SingleResponsibilityPrincipleTests.badtrades.txt");
+            var tradeStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SingleResponsibilityPrincipleTests.decimalTradeAmount.txt");
             var tradeProcessor = new TradeProcessor();
-            // string[] trade = ["GBPUSF,100,1.5"];
 
             //Act
             int countBefore = CountDbRecords();

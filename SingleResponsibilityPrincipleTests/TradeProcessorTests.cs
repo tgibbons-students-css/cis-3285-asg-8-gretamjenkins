@@ -46,6 +46,7 @@ namespace SingleResponsibilityPrinciple.Tests
             Assert.AreEqual(countBefore + 4, countAfter);
         }
 
+        // Negative trade amounts should not be valid
         [TestMethod()]
         public void TestNegativeTradeAmount()
         {
@@ -62,13 +63,13 @@ namespace SingleResponsibilityPrinciple.Tests
             Assert.AreEqual(countBefore, countAfter);
         }
 
+        // Trade amounts must be between 500 and 15000
         [TestMethod()]
-        public void TestInvalidTradeCurrency()
+        public void TestAmountTradesInterval()
         {
             //Arrange
-            var tradeStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SingleResponsibilityPrincipleTests.invalidTradeCurrency.txt");
+            var tradeStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SingleResponsibilityPrincipleTests.invalidTradeAmounts.txt");
             var tradeProcessor = new TradeProcessor();
-            // string[] trade = ["GBPUSF,100,1.5"];
 
             //Act
             int countBefore = CountDbRecords();
@@ -76,11 +77,12 @@ namespace SingleResponsibilityPrinciple.Tests
 
             //Assert
             int countAfter = CountDbRecords();
-            Assert.AreEqual(countBefore + 1, countAfter);
+            Assert.AreEqual(countBefore, countAfter);
         }
-
+        
+        // Trades with dollar signs should still be valid
         [TestMethod()]
-        public void TestPriceDollarSign()
+        public void TestPriceWithDollarSign()
         {
             //Arrange
             var tradeStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SingleResponsibilityPrincipleTests.priceDollarSign.txt");
@@ -95,8 +97,9 @@ namespace SingleResponsibilityPrinciple.Tests
             Assert.AreEqual(countBefore + 1, countAfter);
         }
 
+        // Decimal trade amounts should still be valid and should be rounded to the nearest integer
         [TestMethod()]
-        public void TestDecminalTradeAmount()
+        public void TestDecimalTradeAmount()
         {
             //Arrange
             var tradeStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SingleResponsibilityPrincipleTests.decimalTradeAmount.txt");

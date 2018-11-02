@@ -75,7 +75,7 @@
     <EmbeddedResource Include="negativeTradeAmount.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="invalidTradeCurrency.txt" />
+    <EmbeddedResource Include="invalidTradeAmounts.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="priceDollarSign.txt" />

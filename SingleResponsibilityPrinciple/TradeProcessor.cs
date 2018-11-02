@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
@@ -62,21 +63,47 @@ namespace SingleResponsibilityPrinciple
             }
 
             int tradeAmount;
-            if (!int.TryParse(fields[1], out tradeAmount))
+            // Logs error when the trade amount is not an integer, is a negative integer, or is not between 500 and 15000
+            if (!int.TryParse(fields[1], out tradeAmount) || (int.Parse(fields[1]) < 0))
             {
-                LogMessage("WARN: Trade amount on line {0} not a valid integer: '{1}'", currentLine, fields[1]);
+                //// decimal amount;
+                //if (decimal.TryParse(fields[1], out tradeAmount))
+                //{
+                //    fields[1] = Math.Round(decimal.Parse(fields[1])).ToString();
+                //}
+
+                    LogMessage("WARN: Trade amount on line {0} not a valid integer: '{1}'", currentLine, fields[1]);
+                    return false;
+
+            }
+            else if (tradeAmount > 15000)
+            {
+                LogMessage("WARN", " Trade amount on line {0} is greater than 15000: '{1}'", currentLine, fields[1]);
+                return false;
+            }
+            else if (tradeAmount < 500)
+            {
+                LogMessage("WARN", " Trade amount on line {0} is less than 500: '{1}'", currentLine, fields[1]);
                 return false;
             }
 
             decimal tradePrice;
+
+            // Removes a dollar sign from an invalid trade price so that the price and trade remain valid
+            string dollarSign = "$";
+            if (fields[2].Contains(dollarSign))
+            {
+                fields[2] = fields[2].Replace(dollarSign, "");
+            }
             if (!decimal.TryParse(fields[2], out tradePrice))
             {
                 LogMessage("WARN: Trade price on line {0} not a valid decimal: '{1}'", currentLine, fields[2]);
-                return false;
+                return false;                
             }
 
             return true;
         }
+
 
         private void LogMessage(string message, params object[] args)
         {

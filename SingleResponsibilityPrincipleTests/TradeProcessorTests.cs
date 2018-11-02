@@ -102,7 +102,7 @@ namespace SingleResponsibilityPrinciple.Tests
         public void TestDecimalTradeAmount()
         {
             //Arrange
-            var tradeStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SingleResponsibilityPrincipleTests.decimalTradeAmount.txt");
+            var tradeStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SingleResponsibilityPrincipleTests.demicalTradeAmount.txt");
             var tradeProcessor = new TradeProcessor();
 
             //Act

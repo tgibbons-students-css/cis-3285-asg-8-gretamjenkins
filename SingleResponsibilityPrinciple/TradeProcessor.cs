@@ -66,14 +66,14 @@ namespace SingleResponsibilityPrinciple
             // Logs error when the trade amount is not an integer, is a negative integer, or is not between 500 and 15000
             if (!int.TryParse(fields[1], out tradeAmount) || (int.Parse(fields[1]) < 0))
             {
-                //// decimal amount;
-                //if (decimal.TryParse(fields[1], out tradeAmount))
-                //{
-                //    fields[1] = Math.Round(decimal.Parse(fields[1])).ToString();
-                //}
-
+                if (fields[1].Contains("."))
+                {
+                    fields[1] = Math.Round(decimal.Parse(fields[1])).ToString();
+                }
+                else {
                     LogMessage("WARN: Trade amount on line {0} not a valid integer: '{1}'", currentLine, fields[1]);
                     return false;
+                }
 
             }
             else if (tradeAmount > 15000)

@@ -66,6 +66,7 @@ namespace SingleResponsibilityPrinciple
             // Logs error when the trade amount is not an integer, is a negative integer, or is not between 500 and 15000
             if (!int.TryParse(fields[1], out tradeAmount) || (int.Parse(fields[1]) < 0))
             {
+                // If the trade amount contains a decimal anywhere, round the decimal to the nearest integer
                 if (fields[1].Contains("."))
                 {
                     fields[1] = Math.Round(decimal.Parse(fields[1])).ToString();
